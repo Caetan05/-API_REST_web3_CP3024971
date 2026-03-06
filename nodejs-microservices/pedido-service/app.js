@@ -1,4 +1,3 @@
-
 import express from "express";
 import dotenv from "dotenv";
 import sequelize from "./config/database.js";
@@ -8,12 +7,21 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use("/pedidos",pedidoRoutes);
 
-(async ()=>{
- await sequelize.authenticate();
- await sequelize.sync();
- app.listen(process.env.PORT,()=>{
-   console.log("Pedido service rodando");
- });
+app.get("/health", (req, res) => res.json({ ok: true, service: "pedido-service" }));
+app.use("/pedidos", pedidoRoutes);
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
+    console.log("✅ Pedido DB sincronizado!");
+
+    app.listen(process.env.PORT, () => {
+      console.log(`🚀 Pedido Service rodando na porta ${process.env.PORT}`);
+    });
+  } catch (err) {
+    console.error("❌ Erro ao iniciar o Pedido Service:", err.message);
+    process.exit(1);
+  }
 })();

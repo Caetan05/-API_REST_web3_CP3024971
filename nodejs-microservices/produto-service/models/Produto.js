@@ -1,14 +1,14 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
-const Cliente = sequelize.define(
-  "Cliente",
+const Produto = sequelize.define(
+  "Produto",
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     nome: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false, unique: true }
+    preco: { type: DataTypes.DOUBLE, allowNull: false }
   },
   { timestamps: true }
 );
 
-export default Cliente;
+export default Produto;
